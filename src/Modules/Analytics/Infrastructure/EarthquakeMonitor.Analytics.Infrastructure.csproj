@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
+    <ProjectReference Include="..\Application\EarthquakeMonitor.Analytics.Application.csproj" />
+    <ProjectReference Include="..\Domain\EarthquakeMonitor.Analytics.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Infrastructure\EarthquakeMonitor.Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Kernel\EarthquakeMonitor.Shared.Kernel.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

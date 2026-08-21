@@ -1,0 +1,96 @@
+# -----------------------------------------------------------------------------
+# Secrets and local configuration
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+secrets/
+local.settings.json
+secrets.json
+secrets.*.json
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+
+# Oracle Wallet and private database credentials
+wallet.zip
+wallet/
+**/wallet.zip
+**/wallet/
+*.ora
+tnsnames.ora
+sqlnet.ora
+
+# Certificates, private keys, tokens and credentials
+*.pfx
+*.p12
+*.pem
+*.key
+*.crt
+*.cer
+*.jks
+*.keystore
+*credentials*.json
+*credential*.json
+*service-account*.json
+*serviceaccount*.json
+*.secret
+*.secrets
+connectionstrings.local.*
+**/connectionstrings.local.*
+
+# .NET build and tooling artifacts
+**/bin/
+**/obj/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.nupkg
+*.snupkg
+TestResults/
+**/TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Visual Studio, VS Code and Rider local files
+.vs/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+.idea/
+*.DotSettings.user
+
+# Frontend / Node.js artifacts
+node_modules/
+**/node_modules/
+dist/
+build/
+.npm/
+.npmrc
+!.npmrc.example
+*.tsbuildinfo
+*.tgz
+
+# Logs, temporary files and generated reports
+*.log
+logs/
+**/logs/
+*.tmp
+*.temp
+*.cache
+*.bak
+*.swp
+*.swo
+
+# Windows and OS-specific artifacts
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+.DS_Store
+.AppleDouble
+.LSOverride

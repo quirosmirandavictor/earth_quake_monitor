@@ -1,0 +1,42 @@
+<Solution>
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Analytics/" />
+  <Folder Name="/Modules/Analytics/Application/">
+    <Project Path="Modules/Analytics/Application/EarthquakeMonitor.Analytics.Application.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Analytics/Infrastructure/">
+    <Project Path="Modules/Analytics/Infrastructure/EarthquakeMonitor.Analytics.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Earthquakes/" />
+  <Folder Name="/Modules/Earthquakes/Application/">
+    <Project Path="Modules/Earthquakes/Application/EarthquakeMonitor.Earthquakes.Application.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Earthquakes/Domain/">
+    <Project Path="Modules/Earthquakes/Domain/EarthquakeMonitor.Earthquakes.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Earthquakes/Infrastructure/">
+    <Project Path="Modules/Earthquakes/Infrastructure/EarthquakeMonitor.Earthquakes.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Regions/" />
+  <Folder Name="/Modules/Regions/Application/">
+    <Project Path="Modules/Regions/Application/EarthquakeMonitor.Regions.Application.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Regions/Domain/">
+    <Project Path="Modules/Regions/Domain/EarthquakeMonitor.Regions.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Regions/Infrastructure/">
+    <Project Path="Modules/Regions/Infrastructure/EarthquakeMonitor.Regions.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Shared/" />
+  <Folder Name="/Shared/Infrastructure/">
+    <Project Path="Shared/Infrastructure/EarthquakeMonitor.Shared.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Shared/Kernel/">
+    <Project Path="Shared/Kernel/EarthquakeMonitor.Shared.Kernel.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="../tests/EarthquakeMonitor.Earthquakes.IntegrationTests/EarthquakeMonitor.Earthquakes.IntegrationTests.csproj" />
+    <Project Path="../tests/EarthquakeMonitor.Earthquakes.UnitTests/EarthquakeMonitor.Earthquakes.UnitTests.csproj" />
+  </Folder>
+  <Project Path="EarthquakeMonitor.Functions/EarthquakeMonitor.Functions.csproj" />
+</Solution>
