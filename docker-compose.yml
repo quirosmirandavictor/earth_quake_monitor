@@ -1,0 +1,39 @@
+services:
+  azurite:
+    image: ${AZURITE_IMAGE}
+    container_name: ${AZURITE_CONTAINER_NAME}
+    environment:
+      AZURITE_ACCOUNTS: "${AZURITE_ACCOUNT_NAME}:${AZURITE_ACCOUNT_KEY}"
+    command: azurite --blobHost ${AZURITE_BIND_ADDRESS} --queueHost ${AZURITE_BIND_ADDRESS} --tableHost ${AZURITE_BIND_ADDRESS} --loose --skipApiVersionCheck
+    ports:
+      - "${AZURITE_BLOB_PORT}:${AZURITE_BLOB_PORT}"
+      - "${AZURITE_QUEUE_PORT}:${AZURITE_QUEUE_PORT}"
+      - "${AZURITE_TABLE_PORT}:${AZURITE_TABLE_PORT}"
+    volumes:
+      - azurite-data:/data
+  functions:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${FUNCTIONS_CONTAINER_NAME}
+    dns:
+      - 8.8.8.8
+    depends_on:
+      azurite:
+        condition: service_started
+    ports:
+      - "${FUNCTIONS_HOST_PORT}:${FUNCTIONS_CONTAINER_PORT}"
+    environment:
+      FUNCTIONS_WORKER_RUNTIME: ${FUNCTIONS_WORKER_RUNTIME}
+      EarthquakeIngestionSchedule: ${EARTHQUAKE_INGESTION_SCHEDULE}
+      AzureWebJobsStorage: ${AZURE_WEBJOBS_STORAGE}
+      ConnectionStrings__Oracle: ${ORACLE_CONNECTION_STRING}
+      TNS_ADMIN: ${TNS_ADMIN_PATH}
+      USGS__PageSize: ${USGS_PAGE_SIZE}
+      USGS__InitialLookbackHours: ${USGS_INITIAL_LOOKBACK_HOURS}
+      USGS__OverlapMinutes: ${USGS_OVERLAP_MINUTES}
+    volumes:
+      - ./secrets/oracle-wallet:${TNS_ADMIN_PATH}:ro
+
+volumes:
+  azurite-data:

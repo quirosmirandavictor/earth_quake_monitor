@@ -1,0 +1,46 @@
+{
+  "Regions": [
+    {
+      "Code": "CostaRica",
+      "Name": "Costa Rica",
+      "Bounds": {
+        "MinimumLatitude": 8.0,
+        "MaximumLatitude": 11.3,
+        "MinimumLongitude": -86.0,
+        "MaximumLongitude": -82.5
+      }
+    },
+    {
+      "Code": "CentralAmerica",
+      "Name": "Central America",
+      "Bounds": {
+        "MinimumLatitude": 7.0,
+        "MaximumLatitude": 18.5,
+        "MinimumLongitude": -93.0,
+        "MaximumLongitude": -77.0
+      }
+    },
+    {
+      "Code": "Caribbean",
+      "Name": "Caribbean",
+      "Bounds": {
+        "MinimumLatitude": 10.0,
+        "MaximumLatitude": 27.0,
+        "MinimumLongitude": -90.0,
+        "MaximumLongitude": -59.0
+      }
+    },
+    {
+      "Code": "Global",
+      "Name": "Global"
+    }
+  ],
+  "USGS": {
+    "BaseUrl": "https://earthquake.usgs.gov/",
+    "QueryEndpoint": "fdsnws/event/1/query",
+    "TimeoutSeconds": 30,
+    "PageSize": 20000,
+    "InitialLookbackHours": 1,
+    "OverlapMinutes": 15
+  }
+}
