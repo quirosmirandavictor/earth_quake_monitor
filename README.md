@@ -7,7 +7,7 @@
 ![Docker](https://img.shields.io/badge/Docker-Local%20Environment-2496ED?logo=docker&logoColor=white)
 ![Azurite](https://img.shields.io/badge/Azurite-Storage%20Emulator-0078D4?logo=microsoftazure&logoColor=white)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20%2B%20Modular%20Monolith-0A66C2)
-![Status](https://img.shields.io/badge/Status-Foundation%20in%20progress-F59E0B)
+[![Release](https://img.shields.io/github/v/tag/quirosmirandavictor/earth_quake_monitor?label=Release&sort=semver)](https://github.com/quirosmirandavictor/earth_quake_monitor/releases)
 
 ---
 
