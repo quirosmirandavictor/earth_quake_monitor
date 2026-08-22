@@ -25,7 +25,7 @@ azure-functions, dotnet, dotnet-10, oracle, oracle-database, oracle-wallet, reac
 
 # 📖 Overview
 
-Earthquake Monitor collects earthquake events from external seismic providers, normalizes them into an internal model, stores them in Oracle and exposes region-focused information for future web experiences.
+Earthquake Monitor collects earthquake events from external seismic providers, normalizes them into an internal model, stores them in Oracle and exposes region-focused information through a protected web experience.
 
 The project starts with a small and understandable foundation that can evolve toward USGS ingestion, regional dashboards, analytics, maps and alerts without prematurely introducing queues or microservices.
 
@@ -45,8 +45,11 @@ The backend foundation currently includes:
 - Unit tests for the USGS mapper and HTTP client.
 - Local Docker execution with Azure Functions and Azurite.
 - Oracle Wallet-based connectivity validation.
+- React event list with automatic initial loading.
+- Leaflet map with magnitude-scaled markers, automatic viewport fitting, and UTC origin timestamps in event popups.
+- Bounded default query window covering stored events from the last seven days, with region and minimum-magnitude filters.
 
-The frontend application, production deployment infrastructure and automated migration runner are planned next stages.
+The repository now includes a React/TypeScript frontend, an interactive event map, and a protected query API. The frontend is designed for Vercel: browser requests go to same-origin serverless proxy functions, which keep the backend keys server-side. Production deployment infrastructure and an automated migration runner remain follow-up work.
 
 ## 🎯 Objectives
 
@@ -84,7 +87,7 @@ Rules:
 flowchart TB
     subgraph Delivery["Delivery / Composition Root"]
         Functions["Azure Functions\nHTTP triggers and local diagnostics"]
-        Frontend["React + TypeScript\nfuture web client"]
+        Frontend["React + TypeScript\nevent list and map"]
     end
 
     subgraph Infrastructure["Infrastructure"]
@@ -336,11 +339,60 @@ git status --short --ignored
 ## 🗺 Future work
 
 - Extend the USGS adapter with pagination continuation and production resilience policies.
-- Add HTTP endpoints for earthquake ingestion, queries and analytics.
 - Add versioned database migrations.
-- Add HTTP endpoints for earthquakes and analytics.
-- Add the React/TypeScript frontend.
-- Add unit tests for domain and application layers.
 - Add GitHub Actions CI/CD.
 - Replace rectangular region bounds with geospatial boundaries.
 - Add production secret management and deployment configuration.
+
+## Public API and abuse protection
+
+The protected read API exposes `GET /api/v1/earthquakes`, `GET /api/v1/earthquakes/{source}/{externalId}` and `GET /api/v1/analytics/earthquakes`. Azure Functions requires `x-functions-key` and the application additionally requires `x-api-key` before executing any query.
+
+React never receives either key. The Vercel serverless proxy in `frontend/api` reads `EARTHQUAKE_API_URL`, `EARTHQUAKE_FUNCTION_KEY` and `EARTHQUAKE_API_KEY` from server-side environment variables and forwards only responses. Configure the Vercel project root as `frontend` and do not use `VITE_*` variables for secrets.
+
+Queries are limited to 100 rows and a maximum period of 366 days. Date, magnitude, coordinate and region parameters are validated. The API applies an instance-local fixed-window rate limit controlled by `PublicApi__RequestsPerMinute` and returns `429` with `Retry-After` when exceeded. The Vercel proxy caches identical reads briefly. Production should add Azure Front Door or API Management with WAF and rate limiting before the Function App.
+
+When the event query does not receive an explicit `from` and `to` range, it uses the last seven days and orders results by origin time descending. This bounded default is used by the frontend map and event list, which display up to 100 stored events. Explicit time ranges remain available for bounded historical queries within the API limit.
+
+Ingestion is not part of the browser API. The scheduled Timer Trigger is the normal path. Operators can manually invoke `POST /api/management/ingestion`, but it uses `AuthorizationLevel.Admin` and requires the Functions host master key. Store that key only in an operator-controlled secret store; never configure it in the frontend.
+
+Vercel server-side variables:
+
+~~~text
+EARTHQUAKE_API_URL=https://<functions-app>
+EARTHQUAKE_API_KEY=<same-value-as-PublicApi__Key>
+~~~
+
+### Test the Frontend with Docker
+
+The frontend can run in Docker together with Functions and Azurite. Vite acts as the development proxy: keys are injected only into the container process and never reach the browser.
+
+First generate `frontend/pnpm-lock.yaml` in an environment with valid TLS certificates. Docker mounts the local Functions host key at `/run/secrets/functions-keys/host.function.default`; the key stays inside the containers and is never sent to the browser.
+
+~~~powershell
+docker compose up -d
+docker compose logs -f frontend
+~~~
+
+Open `http://localhost:5173`. The internal proxy translates `/api/earthquakes` to `/api/v1/earthquakes` and connects to the `functions` service; `EARTHQUAKE_API_KEY` must not be configured as a `VITE_*` variable.
+
+To stop the services:
+
+~~~powershell
+docker compose down
+~~~
+
+### Frontend dependency installation
+
+The frontend uses pnpm exclusively. Do not use `npm install`, `npm ci`, `npx`, or `pnpm dlx` for this project. `frontend/package.json` pins the package manager and all direct dependency versions; the committed `pnpm-lock.yaml` must be generated in a trusted environment and CI must use a frozen lockfile.
+
+The committed `frontend/.npmrc` enforces the npm registry over TLS, lockfile use, exact saves, peer-dependency validation, store-integrity verification, a 24-hour package release age, and disabled lifecycle scripts. A dependency that requires an install or build script is intentionally rejected until it is reviewed and explicitly approved. Install with:
+
+~~~powershell
+cd frontend
+corepack pnpm install --frozen-lockfile --ignore-scripts
+corepack pnpm run build
+corepack pnpm run audit:production
+~~~
+
+Never disable TLS verification, never set `strict-ssl=false`, never use untrusted registries, and never place credentials in `.npmrc`.

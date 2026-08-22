@@ -5,18 +5,24 @@
 - Create the .NET solution with Clean Architecture layers.
 - Define the earthquake domain model and source identity rules.
 - Add the USGS source adapter.
-- Implement scheduled or manually triggered ingestion.
+- Implement scheduled ingestion and operator-only manual ingestion.
 - Implement Oracle persistence with an idempotent UPSERT on `source + external_id`.
 - Support updates to previously ingested USGS events.
-- Expose validated HTTP query endpoints.
-- Add React and TypeScript frontend foundations.
-- Provide event lists, event details, time-range filters, magnitude filters, and the initial region views: Costa Rica, Central America, Caribbean, and Global.
-- Add configuration management, structured logging, error handling, and automated tests.
+- Expose validated HTTP query endpoints protected by Function authorization and a server-side application key.
+- Add React and TypeScript frontend foundations with a Vercel server-side proxy.
+- Provide event lists, event details, time-range filters, magnitude filters, analytics, the initial region filters, and a bounded event map: Costa Rica, Central America, Caribbean, and Global.
+- Add configuration management, structured logging, error handling, rate limiting, query abuse controls, and automated tests.
+
+### Phase 1 operational hardening still required
+
+- Deploy the frontend proxy with server-side secrets only.
+- Put Azure Front Door or API Management WAF/rate limiting in front of the Function App.
+- Add distributed rate limiting if the Function App scales to multiple instances.
+- Add CI/CD, production secret management, and automated database migrations.
 
 ## Phase 2: Product and Geographic Capabilities
 
 - Improve regional boundary definitions and geographic filtering.
-- Add map-based event visualization.
 - Introduce heat maps using event density and magnitude.
 - Add pagination, sorting, and optimized query projections.
 - Add caching for frequently requested regional and time-range queries.
@@ -52,4 +58,3 @@
 ## Guiding Rule
 
 Each phase should be driven by a demonstrated product or operational need. The system should gain capability incrementally while keeping the domain model, source contracts, and regional query concepts stable.
-

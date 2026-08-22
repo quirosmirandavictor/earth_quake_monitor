@@ -7,6 +7,8 @@
     "USGS__PageSize": "20000",
     "USGS__InitialLookbackHours": "1",
     "USGS__OverlapMinutes": "15",
+    "PublicApi__Key": "set-a-long-random-secret-not-used-by-the-browser",
+    "PublicApi__RequestsPerMinute": "60",
     "APPLICATIONINSIGHTS_CONNECTION_STRING": "",
     "ConnectionStrings__Oracle": "User Id=<user>;Password=<password>;Data Source=<service-name>;"
   }
