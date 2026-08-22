@@ -17,6 +17,7 @@ builder.ConfigureFunctionsWebApplication();
 builder.Services.AddEarthquakesInfrastructure();
 builder.Services.AddRegionsInfrastructure();
 builder.Services.AddAnalyticsInfrastructure();
+builder.Services.AddSingleton<EarthquakeMonitor.Functions.Security.PublicApiSecurity>();
 
 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
 {

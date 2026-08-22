@@ -32,8 +32,29 @@ services:
       USGS__PageSize: ${USGS_PAGE_SIZE}
       USGS__InitialLookbackHours: ${USGS_INITIAL_LOOKBACK_HOURS}
       USGS__OverlapMinutes: ${USGS_OVERLAP_MINUTES}
+      PublicApi__Key: ${PUBLIC_API_KEY}
+      PublicApi__RequestsPerMinute: ${PUBLIC_API_REQUESTS_PER_MINUTE}
+      AzureWebJobsSecretStorageType: files
     volumes:
       - ./secrets/oracle-wallet:${TNS_ADMIN_PATH}:ro
+      - ./secrets/functions:/home/data/Functions/Secrets:ro
+      - ./secrets/functions:/azure-functions-host/Secrets:ro
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ${FRONTEND_CONTAINER_NAME}
+    depends_on:
+      functions:
+        condition: service_started
+    ports:
+      - "${FRONTEND_HOST_PORT}:5173"
+    environment:
+      EARTHQUAKE_API_URL: ${FRONTEND_API_URL}
+      EARTHQUAKE_FUNCTION_KEY: ${EARTHQUAKE_FUNCTION_KEY:-}
+      EARTHQUAKE_API_KEY: ${PUBLIC_API_KEY}
+    volumes:
+      - ./secrets/functions:/run/secrets/functions-keys:ro
 
 volumes:
   azurite-data:

@@ -71,6 +71,7 @@ build/
 .npm/
 .npmrc
 !.npmrc.example
+!frontend/.npmrc
 *.tsbuildinfo
 *.tgz
 

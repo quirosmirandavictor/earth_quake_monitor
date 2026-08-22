@@ -18,7 +18,10 @@ The system is a **Modular Monolith** organized according to **Clean Architecture
 ### Frontend
 
 - React with TypeScript.
-- Presents earthquake lists, event details, regional views, and future visualizations such as heat maps.
+- Presents the event list and an interactive Leaflet map with magnitude-scaled markers and event popups.
+- Loads stored events from the default seven-day query window when the page opens.
+- Displays the event origin date and time in UTC in both the list and map popup.
+- Supports Global, Costa Rica, Central America, and Caribbean region filters, plus a minimum magnitude filter.
 - Calls backend APIs rather than accessing Oracle or USGS directly.
 - Keeps presentation state and API concerns separate from domain rules.
 
@@ -89,6 +92,8 @@ USGS events may change after first publication. Therefore, a matching event must
 4. The repository queries Oracle.
 5. The API returns a stable DTO designed for frontend consumption.
 
+When no explicit time range is supplied, the query API uses the last seven days and returns up to 100 events ordered by origin time descending. This default keeps the initial map focused and bounded while preserving explicit time-range queries for historical exploration within the API limits.
+
 ## V1 Boundaries
 
 V1 should include the core ingestion and query path, basic regional filtering, persistence, configuration, validation, logging, and automated tests. It should not require queues, event buses, microservices, or a complex workflow engine unless a concrete operational requirement emerges.
@@ -96,4 +101,3 @@ V1 should include the core ingestion and query path, basic regional filtering, p
 ## Evolution Direction
 
 The architecture leaves clear extension points for heat maps, analytics, clustering, additional data sources, alerts, observability, caching, and asynchronous messaging. These capabilities can be introduced as new modules or infrastructure adapters while preserving the domain model and existing application contracts.
-
