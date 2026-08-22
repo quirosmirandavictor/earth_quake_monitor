@@ -13,6 +13,12 @@
 
 # 🧾 GitHub About Metadata
 
+## Demo
+
+![Earthquake Monitor demo](src/docs/assets/earthquake-monitor-demo.gif)
+
+The demo shows the protected frontend loading stored earthquake events from the default seven-day window, displaying them on the interactive map, and applying regional and magnitude filters.
+
 **Description**
 
 Earthquake monitoring platform with .NET 10, Azure Functions, Oracle, React/TypeScript, Docker and Azurite, organized as a Modular Monolith with Clean Architecture.
