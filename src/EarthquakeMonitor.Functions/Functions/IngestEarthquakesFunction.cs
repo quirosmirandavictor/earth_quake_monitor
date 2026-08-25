@@ -28,7 +28,7 @@ public sealed class IngestEarthquakesFunction(
         var result = await useCase.ExecuteAsync(new SourceQuery(
             StartTime: start,
             EndTime: end,
-            UpdatedAfter: start,
+            UpdatedAfter: null,
             Limit: configuration.GetValue<int?>("USGS:PageSize")
                 ?? throw new InvalidOperationException("USGS:PageSize is not configured.")), cancellationToken);
 

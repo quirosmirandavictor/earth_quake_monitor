@@ -118,7 +118,7 @@ public sealed class EarthquakeQueryFunctions(
 
     private static void Validate(EarthquakeQuery query)
     {
-        if (query.Limit is < 1 or > 100) throw new ApiValidationException("limit must be between 1 and 100.");
+        if (query.Limit is < 1 or > 500) throw new ApiValidationException("limit must be between 1 and 500.");
         if (query.From.HasValue && query.To.HasValue && query.To <= query.From) throw new ApiValidationException("to must be later than from.");
         if (query.MinimumMagnitude > query.MaximumMagnitude) throw new ApiValidationException("minMagnitude cannot exceed maxMagnitude.");
         if (query.MinimumLatitude > query.MaximumLatitude || query.MinimumLongitude > query.MaximumLongitude)

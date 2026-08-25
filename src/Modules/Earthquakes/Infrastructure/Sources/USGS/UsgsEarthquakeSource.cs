@@ -33,7 +33,8 @@ public sealed class UsgsEarthquakeSource(
             ["offset"] = query.Offset.ToString(CultureInfo.InvariantCulture),
             ["limit"] = query.Limit.ToString(CultureInfo.InvariantCulture)
         };
-        AddOptional(parameters, "updatedafter", query.UpdatedAfter);
+        // USGS only supports updatedafter together with eventid. Sending it on
+        // a general time-window query can cause the provider to return no data.
         AddOptional(parameters, "minmagnitude", query.MinimumMagnitude);
         AddOptional(parameters, "minlatitude", query.MinimumLatitude);
         AddOptional(parameters, "maxlatitude", query.MaximumLatitude);

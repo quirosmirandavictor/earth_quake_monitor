@@ -5,7 +5,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "EarthquakeIngestionSchedule": "0 */5 * * * *",
     "USGS__PageSize": "20000",
-    "USGS__InitialLookbackHours": "1",
+    "USGS__InitialLookbackHours": "24",
     "USGS__OverlapMinutes": "15",
     "PublicApi__Key": "set-a-long-random-secret-not-used-by-the-browser",
     "PublicApi__RequestsPerMinute": "60",

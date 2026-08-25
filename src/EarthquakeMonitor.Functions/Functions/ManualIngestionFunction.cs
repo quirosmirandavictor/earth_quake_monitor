@@ -18,7 +18,8 @@ public sealed class ManualIngestionFunction(IIngestEarthquakesUseCase useCase, I
         var end = DateTimeOffset.UtcNow;
         var lookback = configuration.GetValue<int>("USGS:InitialLookbackHours");
         var overlap = configuration.GetValue<int>("USGS:OverlapMinutes");
-        var result = await useCase.ExecuteAsync(new SourceQuery(end.AddHours(-lookback).AddMinutes(-overlap), end, end.AddHours(-lookback), configuration.GetValue<int>("USGS:PageSize")), cancellationToken);
+        var start = end.AddHours(-lookback).AddMinutes(-overlap);
+        var result = await useCase.ExecuteAsync(new SourceQuery(start, end, UpdatedAfter: null, Limit: configuration.GetValue<int>("USGS:PageSize")), cancellationToken);
         var response = request.CreateResponse(result.FailedCount == 0 ? HttpStatusCode.OK : HttpStatusCode.InternalServerError);
         await response.WriteAsJsonAsync(result, cancellationToken);
         return response;

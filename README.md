@@ -54,6 +54,7 @@ The backend foundation currently includes:
 - React event list with automatic initial loading.
 - Leaflet map with magnitude-scaled markers, automatic viewport fitting, and UTC origin timestamps in event popups.
 - Bounded default query window covering stored events from the last seven days, with region and minimum-magnitude filters.
+- Visible loading feedback while the frontend refreshes filtered earthquake results.
 
 The repository now includes a React/TypeScript frontend, an interactive event map, and a protected query API. The frontend is designed for Vercel: browser requests go to same-origin serverless proxy functions, which keep the backend keys server-side. Production deployment infrastructure and an automated migration runner remain follow-up work.
 
@@ -220,11 +221,13 @@ Create or edit the ignored .env file in the repository root:
 ORACLE_CONNECTION_STRING=User Id=YOUR_ORACLE_USER;Password=YOUR_ORACLE_PASSWORD;Data Source=YOUR_TNS_ALIAS;Tns_Admin=/opt/oracle/wallet
 EARTHQUAKE_INGESTION_SCHEDULE=0 */5 * * * *
 USGS_PAGE_SIZE=20000
-USGS_INITIAL_LOOKBACK_HOURS=1
+USGS_INITIAL_LOOKBACK_HOURS=24
 USGS_OVERLAP_MINUTES=15
 ~~~
 
 Use a TNS alias defined in secrets/oracle-wallet/tnsnames.ora, for example Data Source=example_low. The template is available at [.env.example](.env.example).
+
+The scheduled ingestion runs every five minutes and re-reads the configured lookback window with the configured overlap. This recovery window allows the process to ingest events after a short outage or a delayed provider publication while the idempotent `source + external_id` key prevents duplicates. General time-window queries do not send USGS `updatedafter`, because USGS only supports that parameter together with `eventid`.
 
 Do not use a Windows path in the Docker connection string; use Tns_Admin=/opt/oracle/wallet.
 
@@ -356,9 +359,9 @@ The protected read API exposes `GET /api/v1/earthquakes`, `GET /api/v1/earthquak
 
 React never receives either key. The Vercel serverless proxy in `frontend/api` reads `EARTHQUAKE_API_URL`, `EARTHQUAKE_FUNCTION_KEY` and `EARTHQUAKE_API_KEY` from server-side environment variables and forwards only responses. Configure the Vercel project root as `frontend` and do not use `VITE_*` variables for secrets.
 
-Queries are limited to 100 rows and a maximum period of 366 days. Date, magnitude, coordinate and region parameters are validated. The API applies an instance-local fixed-window rate limit controlled by `PublicApi__RequestsPerMinute` and returns `429` with `Retry-After` when exceeded. The Vercel proxy caches identical reads briefly. Production should add Azure Front Door or API Management with WAF and rate limiting before the Function App.
+Queries are limited to 500 rows and a maximum period of 366 days. Date, magnitude, coordinate and region parameters are validated. The frontend requests up to 350 rows for Global and 100 rows for a selected region. The API applies an instance-local fixed-window rate limit controlled by `PublicApi__RequestsPerMinute` and returns `429` with `Retry-After` when exceeded. The Vercel proxy caches identical reads briefly. Production should add Azure Front Door or API Management with WAF and rate limiting before the Function App.
 
-When the event query does not receive an explicit `from` and `to` range, it uses the last seven days and orders results by origin time descending. This bounded default is used by the frontend map and event list, which display up to 100 stored events. Explicit time ranges remain available for bounded historical queries within the API limit.
+When the event query does not receive an explicit `from` and `to` range, it uses the last seven days and orders results by origin time descending. This bounded default is used by the frontend map and event list. Explicit time ranges remain available for bounded historical queries within the API limit.
 
 Ingestion is not part of the browser API. The scheduled Timer Trigger is the normal path. Operators can manually invoke `POST /api/management/ingestion`, but it uses `AuthorizationLevel.Admin` and requires the Functions host master key. Store that key only in an operator-controlled secret store; never configure it in the frontend.
 
