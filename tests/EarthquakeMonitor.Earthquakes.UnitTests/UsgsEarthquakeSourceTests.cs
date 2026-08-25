@@ -34,6 +34,7 @@ public sealed class UsgsEarthquakeSourceTests
         Assert.NotNull(handler.RequestUri);
         Assert.Contains("format=geojson", handler.RequestUri!.Query);
         Assert.Contains("minmagnitude=2.5", handler.RequestUri.Query);
+        Assert.DoesNotContain("updatedafter", handler.RequestUri.Query);
         Assert.Single(result.Events);
         Assert.Equal("us-test-1", result.Events[0].ExternalId);
     }

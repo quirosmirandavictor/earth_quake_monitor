@@ -69,7 +69,7 @@ This prevents unauthenticated users from forcing expensive USGS and Oracle work.
 ## ADR-013: Apply Query Abuse Controls at Multiple Layers
 **Status:** Accepted
 
-The query API applies strict validation, a maximum period of 366 days, a maximum page size of 100, indexed bounded queries, DTOs without raw payloads, fixed-window per-client rate limiting, `Retry-After` responses, and no-store behavior for unauthorized responses. The Vercel proxy adds short-lived shared caching for identical reads.
+The query API applies strict validation, a maximum period of 366 days, a maximum page size of 500, indexed bounded queries, DTOs without raw payloads, fixed-window per-client rate limiting, `Retry-After` responses, and no-store behavior for unauthorized responses. The frontend uses a 350-row page for Global and keeps regional queries at 100 results. The Vercel proxy adds short-lived shared caching for identical reads.
 
 The in-memory limiter is an instance-local V1 defense. Production should add Azure Front Door or API Management WAF/rate limiting before the Function App; Redis or a distributed limiter can be introduced if multi-instance fairness becomes necessary. Credentials, provider payloads, function keys, and application keys must never be sent to the browser or written to logs.
 

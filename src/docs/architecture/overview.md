@@ -92,7 +92,7 @@ USGS events may change after first publication. Therefore, a matching event must
 4. The repository queries Oracle.
 5. The API returns a stable DTO designed for frontend consumption.
 
-When no explicit time range is supplied, the query API uses the last seven days and returns up to 100 events ordered by origin time descending. This default keeps the initial map focused and bounded while preserving explicit time-range queries for historical exploration within the API limits.
+When no explicit time range is supplied, the query API uses the last seven days and returns events ordered by origin time descending, up to the configured API limit. The frontend requests up to 350 events for Global and 100 for a selected region, keeping regional views focused while reducing the chance that worldwide activity hides local events.
 
 ## V1 Boundaries
 

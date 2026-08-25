@@ -40,7 +40,7 @@
     "QueryEndpoint": "fdsnws/event/1/query",
     "TimeoutSeconds": 30,
     "PageSize": 20000,
-    "InitialLookbackHours": 1,
+    "InitialLookbackHours": 24,
     "OverlapMinutes": 15
   }
 }
